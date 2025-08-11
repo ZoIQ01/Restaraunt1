@@ -1,6 +1,8 @@
 from menu import Menu
 from order import Order
 
+
+
 def show_main_menu():
     print("\n Main menu")
     print("1. Check the menu")
@@ -28,17 +30,19 @@ def main():
             print("\nEnter name of dish (one at a time).")
             print("Press Enter on empty line to finish.")
 
-            while True:
-                dish_name = input("Dish: ").strip()
-                if dish_name == "":
-                    break
+            def dish_menu():
+                while True:
+                    dish_name = input("Dish: ").strip()
+                    if dish_name == "":
+                        break
 
-                dish = menu.find_dish(dish_name)
-                if dish:
-                    order.add_dish(dish)
-                    print(f"Added: {dish.name}")
-                else:
-                    print("Error! Choose from menu.")
+                    dish =menu.find_dish(dish_name)
+                    if dish:
+                        order.add_dish(dish)
+                        print(f"Added: {dish.name}")
+                    else:
+                        print("Error! Choose from menu.")
+            dish_menu()
 
             if order.items:
                 order.print_receipt()
@@ -51,6 +55,7 @@ def main():
 
         else:
             print(" Invalid input!")
+
 
 if __name__ == "__main__":
     main()

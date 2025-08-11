@@ -5,10 +5,26 @@ import os
 class Menu:
     def __init__(self):
         self.categories: list[MenuCategory] = []
+        self.dishes: dict[str, Dish] = {}
+
+    @property
+    def categories(self):
+        return self._categories
+
+    @categories.setter
+    def categories(self, value):
+        if not isinstance(value, list):
+            raise TypeError("Categories must be a list of MenuCategory")
+        if not all(isinstance(cat, MenuCategory) for cat in value):
+            raise ValueError("All items in categories must be MenuCategory")
+        self._categories = value
 
     def load_from_file(self, filename: str):
         if not os.path.exists(filename):
             raise FileNotFoundError(f"Menu file '{filename}' not found.")
+
+        self.categories = []
+        self._dishes = {}
 
         with open(filename, 'r', encoding='utf-8') as file:
             current_category = None
@@ -27,6 +43,7 @@ class Menu:
                         name, price = line.split(",")
                         dish = Dish(name.strip(), float(price.strip()))
                         current_category.add_dish(dish)
+                        self._dishes[dish.name.lower()] = dish
                     except ValueError:
                         print(f"error: {line}")
 
@@ -35,7 +52,7 @@ class Menu:
             for dish in category.dishes:
                 if dish.name.lower() == name.lower():
                     return dish
-        return None
+        return self._dishes.get(name)
 
     def display_menu(self):
         for category in self.categories:
